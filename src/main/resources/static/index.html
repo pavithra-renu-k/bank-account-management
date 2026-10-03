@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Aurelia Bank | Account Management</title>
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap');
+
+        :root {
+            --background: #f7f7f3;
+            --surface: #ffffff;
+            --surface-soft: #f1f3ee;
+
+            --text: #28302d;
+            --text-soft: #727b76;
+            --text-light: #9aa19d;
+
+            --sage: #9baa98;
+            --sage-dark: #687765;
+            --sage-soft: #e5ebe1;
+
+            --blue-soft: #e8eef0;
+            --blue: #71868b;
+
+            --rose-soft: #f2e8e5;
+            --rose: #a67f76;
+
+            --border: #e5e7e2;
+
+            --shadow:
+                0 15px 40px rgba(42, 48, 44, 0.06);
+
+            --shadow-hover:
+                0 22px 50px rgba(42, 48, 44, 0.10);
+
+            --radius: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        select {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 76px;
+            padding: 0 6%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: rgba(247, 247, 243, 0.88);
+            backdrop-filter: blur(14px);
+
+            border-bottom: 1px solid rgba(220, 223, 217, 0.7);
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 11px;
+
+            background: var(--sage-soft);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--sage-dark);
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-subtitle {
+            font-size: 10px;
+            color: var(--text-light);
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            font-size: 12px;
+            color: var(--text-soft);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #9caf8e;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .container {
+            width: min(1200px, 88%);
+            margin: auto;
+        }
+
+
+        /* ================= HERO ================= */
+
+        .hero {
+            padding: 70px 0 45px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .eyebrow {
+            color: var(--sage-dark);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+
+            margin-bottom: 15px;
+        }
+
+        .hero h1 {
+            font-family: "Playfair Display", serif;
+
+            font-size: clamp(42px, 5vw, 64px);
+            font-weight: 500;
+
+            line-height: 1.05;
+            letter-spacing: -2px;
+
+            max-width: 650px;
+        }
+
+        .hero h1 span {
+            color: var(--sage-dark);
+        }
+
+        .hero-text {
+            margin-top: 18px;
+
+            max-width: 560px;
+
+            color: var(--text-soft);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        .btn {
+            border: none;
+            border-radius: 11px;
+
+            padding: 12px 18px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--sage-dark);
+            color: white;
+
+            box-shadow: 0 8px 20px rgba(104, 119, 101, 0.18);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 12px 25px rgba(104, 119, 101, 0.25);
+            background: #a094ac;
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: var(--shadow);
+        }
+
+
+        /* ================= STAT CARDS ================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            padding: 25px;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .stat-label {
+            color: var(--text-soft);
+            font-size: 12px;
+        }
+
+        .stat-icon {
+            width: 34px;
+            height: 34px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .icon-sage {
+            background: var(--sage-soft);
+            color: var(--sage-dark);
+        }
+
+        .icon-blue {
+            background: var(--blue-soft);
+            color: var(--blue);
+        }
+
+        .icon-rose {
+            background: var(--rose-soft);
+            color: var(--rose);
+        }
+
+        .stat-value {
+            font-family: "Playfair Display", serif;
+            font-size: 31px;
+            font-weight: 500;
+            letter-spacing: -0.8px;
+        }
+
+
+        /* ================= SECTIONS ================= */
+
+        .section {
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow);
+
+            margin-bottom: 24px;
+
+            overflow: hidden;
+
+            animation: fadeUp 0.7s ease both;
+        }
+
+        .section-header {
+            padding: 24px 26px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-family: "Playfair Display", serif;
+
+            font-size: 23px;
+            font-weight: 500;
+        }
+
+        .section-description {
+            color: var(--text-soft);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+
+        /* ================= TABLE ================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 15px 26px;
+
+            text-align: left;
+
+            color: var(--text-light);
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+
+            background: #fafaf7;
+        }
+
+        td {
+            padding: 18px 26px;
+
+            border-top: 1px solid #eeeeea;
+
+            font-size: 13px;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #fafbf8;
+        }
+
+        .account-number {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .customer-link {
+            border: none;
+            background: transparent;
+
+            color: var(--text);
+            font-weight: 600;
+
+            padding: 0;
+
+            transition: color 0.2s ease;
+        }
+
+        .customer-link:hover {
+            color: var(--sage-dark);
+        }
+
+        .branch-name {
+            font-weight: 500;
+        }
+
+        .city {
+            color: var(--text-soft);
+        }
+
+        .balance {
+            font-weight: 700;
+        }
+
+
+        /* ================= DELETE ================= */
+
+        .delete-btn {
+            border: none;
+            background: var(--rose-soft);
+
+            color: var(--rose);
+
+            width: 34px;
+            height: 34px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.08);
+            background: #eadbd7;
+        }
+
+
+        /* ================= OPERATIONS ================= */
+
+        .operations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 24px;
+
+            margin-bottom: 24px;
+        }
+
+        .operation-card {
+            background: var(--surface);
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            padding: 25px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .operation-card h3 {
+            font-family: "Playfair Display", serif;
+
+            font-size: 21px;
+            font-weight: 500;
+
+            margin-bottom: 6px;
+        }
+
+        .operation-card p {
+            color: var(--text-soft);
+            font-size: 12px;
+
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        input,
+        select {
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background: #fbfbf8;
+
+            color: var(--text);
+
+            outline: none;
+
+            font-size: 13px;
+
+            transition:
+                border 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--sage);
+            box-shadow: 0 0 0 3px rgba(155, 170, 152, 0.14);
+        }
+
+        .operation-buttons {
+            display: flex;
+            gap: 9px;
+            margin-top: 10px;
+        }
+
+        .deposit-btn {
+            background: var(--sage-soft);
+            color: var(--sage-dark);
+        }
+
+        .withdraw-btn {
+            background: var(--rose-soft);
+            color: var(--rose);
+        }
+
+
+        /* ================= AVERAGE ================= */
+
+        .average-content {
+            padding: 22px 26px;
+        }
+
+        .average-item {
+            display: flex;
+            justify-content: space-between;
+
+            padding: 14px 0;
+
+            border-bottom: 1px solid var(--border);
+
+            font-size: 13px;
+        }
+
+        .average-item:last-child {
+            border-bottom: none;
+        }
+
+        .average-name {
+            font-weight: 600;
+        }
+
+        .average-balance {
+            color: var(--sage-dark);
+            font-weight: 700;
+        }
+
+
+        /* ================= MODAL ================= */
+
+        .modal-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(40, 48, 45, 0.22);
+
+            backdrop-filter: blur(7px);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+
+            opacity: 0;
+            visibility: hidden;
+
+            transition:
+                opacity 0.3s ease,
+                visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            width: min(470px, 100%);
+
+            background: var(--surface);
+
+            border-radius: 22px;
+
+            border: 1px solid var(--border);
+
+            box-shadow:
+                0 30px 80px rgba(35, 43, 39, 0.15);
+
+            padding: 30px;
+
+            transform: translateY(20px) scale(0.98);
+
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-family: "Playfair Display", serif;
+
+            font-size: 27px;
+            font-weight: 500;
+        }
+
+        .modal-subtitle {
+            color: var(--text-soft);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .close-btn {
+            border: none;
+            background: var(--surface-soft);
+
+            width: 34px;
+            height: 34px;
+
+            border-radius: 9px;
+
+            color: var(--text-soft);
+
+            transition: background 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: var(--border);
+        }
+
+        .detail-list {
+            border-top: 1px solid var(--border);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+
+            padding: 15px 0;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-label {
+            color: var(--text-soft);
+            font-size: 12px;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* ================= FORM MODAL ================= */
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            color: var(--text-soft);
+
+            margin-bottom: 7px;
+        }
+
+        .modal-submit {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+
+        /* ================= TOAST ================= */
+
+        .toast {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            background: #ffffff;
+
+            border: 1px solid var(--border);
+
+            box-shadow: var(--shadow-hover);
+
+            border-radius: 12px;
+
+            padding: 14px 18px;
+
+            font-size: 13px;
+
+            transform: translateY(30px);
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: all 0.3s ease;
+
+            z-index: 2000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            padding: 35px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+
+        /* ================= ANIMATION ================= */
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 800px) {
+
+            .hero {
+                display: block;
+            }
+
+            .hero-actions {
+                margin-top: 25px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .operations {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 0 5%;
+            }
+
+            .container {
+                width: 92%;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-mark">
+            AB
+        </div>
+
+        <div>
+
+            <div class="brand-name">
+                Bank Management
+            </div>
+
+            <div class="brand-subtitle">
+                Account Management
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="status">
+
+        <span class="status-dot"></span>
+
+        Banking system online
+
+    </div>
+
+</nav>
+
+
+
+<main class="container">
+
+
+    <!-- ================= HERO ================= -->
+
+    <section class="hero">
+
+        <div>
+
+            <div class="eyebrow">
+                Personal Banking
+            </div>
+
+            <h1>
+                Your accounts,
+                <span>beautifully organized.</span>
+            </h1>
+
+            <p class="hero-text">
+
+               
+
+            </p>
+
+        </div>
+
+
+        <div class="hero-actions">
+
+            <button
+                class="btn btn-secondary"
+                onclick="loadAccounts()">
+
+                Refresh
+
+            </button>
+
+            <button
+                class="btn btn-primary"
+                onclick="openAddModal()">
+
+                + Add account
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <section class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Total accounts
+                </span>
+
+                <span class="stat-icon icon-sage">
+                    AC
+                </span>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalAccounts">
+
+                0
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Total balance
+                </span>
+
+                <span class="stat-icon icon-blue">
+                    ₹
+                </span>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalBalance">
+
+                ₹0
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    System status
+                </span>
+
+                <span class="stat-icon icon-rose">
+                    ●
+                </span>
+
+            </div>
+
+            <div class="stat-value">
+                Active
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= ACCOUNTS ================= -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    Account overview
+                </div>
+
+                <div class="section-description">
+                    Click a customer name to view complete account details.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Account
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Branch
+                        </th>
+
+                        <th>
+                            City
+                        </th>
+
+                        <th>
+                            Balance
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="accountTable">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= OPERATIONS ================= -->
+
+    <div class="operations">
+
+
+        <!-- MONEY -->
+
+        <section class="operation-card">
+
+            <h3>
+                Money operations
+            </h3>
+
+            <p>
+                Deposit or withdraw funds from an existing account.
+            </p>
+
+
+            <div class="form-row">
+
+                <select id="operationAccount">
+
+                    <option value="">
+                        Select account
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="number"
+                    id="operationAmount"
+                    placeholder="Amount"
+                    min="1">
+
+            </div>
+
+
+            <div class="operation-buttons">
+
+                <button
+                    class="btn deposit-btn"
+                    onclick="deposit()">
+
+                    Deposit
+
+                </button>
+
+
+                <button
+                    class="btn withdraw-btn"
+                    onclick="withdraw()">
+
+                    Withdraw
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ABOVE AVERAGE -->
+
+        <section class="operation-card">
+
+            <h3>
+                Above average
+            </h3>
+
+            <p>
+                Accounts currently holding more than the average balance.
+            </p>
+
+
+            <button
+                class="btn btn-secondary"
+                onclick="loadAboveAverage()">
+
+                View accounts
+
+            </button>
+
+
+            <div
+                id="aboveAverage"
+                style="margin-top:18px;">
+
+            </div>
+
+        </section>
+
+
+    </div>
+
+
+</main>
+
+
+
+<!-- ================= ACCOUNT DETAILS MODAL ================= -->
+
+<div
+    class="modal-overlay"
+    id="detailsModal"
+    onclick="closeModalOutside(event)">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <div class="modal-title">
+                    Account details
+                </div>
+
+                <div class="modal-subtitle">
+                    Complete customer account information
+                </div>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeDetailsModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="detail-list"
+            id="detailsContent">
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= ADD ACCOUNT MODAL ================= -->
+
+<div
+    class="modal-overlay"
+    id="addModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+
+                <div class="modal-title">
+                    New account
+                </div>
+
+                <div class="modal-subtitle">
+                    Create a new customer account
+                </div>
+
+            </div>
+
+
+            <button
+                class="close-btn"
+                onclick="closeAddModal()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Customer ID
+            </label>
+
+            <input
+                type="number"
+                id="newCustomerId"
+                placeholder="Example: 1">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Branch ID
+            </label>
+
+            <input
+                type="number"
+                id="newBranchId"
+                placeholder="Example: 1">
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>
+                Opening balance
+            </label>
+
+            <input
+                type="number"
+                id="newBalance"
+                placeholder="Example: 10000"
+                min="0">
+
+        </div>
+
+
+        <button
+            class="btn btn-primary modal-submit"
+            onclick="addAccount()">
+
+            Create account
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= TOAST ================= -->
+
+<div
+    class="toast"
+    id="toast">
+
+</div>
+
+
+
+<script>
+
+
+const API = "/api/accounts";
+
+let accounts = [];
+
+
+
+/* ================= LOAD ACCOUNTS ================= */
+
+async function loadAccounts() {
+
+    try {
+
+        const response =
+            await fetch(API + "/details");
+
+
+        if (!response.ok) {
+
+            throw new Error("Server error");
+
+        }
+
+
+        accounts =
+            await response.json();
+
+
+        renderAccounts();
+
+        updateStatistics();
+
+        populateAccountSelect();
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        showToast(
+            "Unable to connect to the banking server."
+        );
+
+    }
+
+}
+
+
+
+/* ================= RENDER TABLE ================= */
+
+function renderAccounts() {
+
+    const table =
+        document.getElementById("accountTable");
+
+
+    table.innerHTML = "";
+
+
+    if (accounts.length === 0) {
+
+        table.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="empty">
+
+                    No accounts available.
+                    Create your first account.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    accounts.forEach(account => {
+
+
+        table.innerHTML += `
+
+            <tr>
+
+                <td>
+
+                    <span class="account-number">
+
+                        #${account.accountId}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="customer-link"
+                        onclick='showDetails(${JSON.stringify(account)})'>
+
+                        ${account.customerName}
+
+                    </button>
+
+                </td>
+
+
+                <td>
+
+                    <span class="branch-name">
+
+                        ${account.branchName}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="city">
+
+                        ${account.branchCity}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <span class="balance">
+
+                        ₹${Number(account.balance).toLocaleString("en-IN", {
+                            minimumFractionDigits: 2
+                        })}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteAccount(${account.accountId})">
+
+                        Delete
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+}
+
+
+
+/* ================= STATISTICS ================= */
+
+function updateStatistics() {
+
+    const total =
+        accounts.reduce(
+            (sum, account) =>
+                sum + Number(account.balance),
+            0
+        );
+
+
+    document.getElementById("totalAccounts")
+        .innerText = accounts.length;
+
+
+    document.getElementById("totalBalance")
+        .innerText =
+        "₹" +
+        total.toLocaleString("en-IN", {
+            minimumFractionDigits: 2
+        });
+
+}
+
+
+
+/* ================= ACCOUNT SELECT ================= */
+
+function populateAccountSelect() {
+
+    const select =
+        document.getElementById("operationAccount");
+
+
+    select.innerHTML = `
+
+        <option value="">
+            Select account
+        </option>
+
+    `;
+
+
+    accounts.forEach(account => {
+
+        select.innerHTML += `
+
+            <option value="${account.accountId}">
+
+                ${account.customerName}
+                — Account #${account.accountId}
+
+            </option>
+
+        `;
+
+    });
+
+}
+
+
+
+/* ================= DETAILS MODAL ================= */
+
+function showDetails(account) {
+
+    const content =
+        document.getElementById("detailsContent");
+
+
+    content.innerHTML = `
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Account ID
+            </span>
+
+            <span class="detail-value">
+                #${account.accountId}
+            </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Customer
+            </span>
+
+            <span class="detail-value">
+                ${account.customerName}
+            </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Branch
+            </span>
+
+            <span class="detail-value">
+                ${account.branchName}
+            </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                City
+            </span>
+
+            <span class="detail-value">
+                ${account.branchCity}
+            </span>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span class="detail-label">
+                Current balance
+            </span>
+
+            <span class="detail-value">
+
+                ₹${Number(account.balance).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2
+                })}
+
+            </span>
+
+        </div>
+
+    `;
+
+
+    document
+        .getElementById("detailsModal")
+        .classList.add("active");
+
+}
+
+
+
+function closeDetailsModal() {
+
+    document
+        .getElementById("detailsModal")
+        .classList.remove("active");
+
+}
+
+
+
+function closeModalOutside(event) {
+
+    if (
+        event.target ===
+        document.getElementById("detailsModal")
+    ) {
+
+        closeDetailsModal();
+
+    }
+
+}
+
+
+
+/* ================= ADD MODAL ================= */
+
+function openAddModal() {
+
+    document
+        .getElementById("addModal")
+        .classList.add("active");
+
+}
+
+
+
+function closeAddModal() {
+
+    document
+        .getElementById("addModal")
+        .classList.remove("active");
+
+}
+
+
+
+/* ================= ADD ACCOUNT ================= */
+
+async function addAccount() {
+
+    const customerId =
+        document.getElementById("newCustomerId").value;
+
+    const branchId =
+        document.getElementById("newBranchId").value;
+
+    const balance =
+        document.getElementById("newBalance").value;
+
+
+    if (
+        !customerId ||
+        !branchId ||
+        balance === ""
+    ) {
+
+        showToast(
+            "Please fill in all account details."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(API, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    customerId: Number(customerId),
+
+                    branchId: Number(branchId),
+
+                    balance: Number(balance)
+
+                })
+
+            });
+
+
+        if (!response.ok) {
+
+            throw new Error("Unable to create account");
+
+        }
+
+
+        closeAddModal();
+
+
+        document.getElementById("newCustomerId")
+            .value = "";
+
+        document.getElementById("newBranchId")
+            .value = "";
+
+        document.getElementById("newBalance")
+            .value = "";
+
+
+        showToast(
+            "Account created successfully."
+        );
+
+
+        loadAccounts();
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        showToast(
+            "Could not create the account."
+        );
+
+    }
+
+}
+
+
+
+/* ================= DELETE ACCOUNT ================= */
+
+async function deleteAccount(id) {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this account?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error("Delete failed");
+
+        }
+
+
+        showToast(
+            "Account deleted successfully."
+        );
+
+
+        loadAccounts();
+
+    }
+
+    catch(error) {
+
+        console.error(error);
+
+        showToast(
+            "Unable to delete account."
+        );
+
+    }
+
+}
+
+
+
+/* ================= DEPOSIT ================= */
+
+async function deposit() {
+
+    const id =
+        document.getElementById("operationAccount")
+            .value;
+
+    const amount =
+        document.getElementById("operationAmount")
+            .value;
+
+
+    if (!id || !amount || Number(amount) <= 0) {
+
+        showToast(
+            "Select an account and enter a valid amount."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/${id}/deposit?amount=${amount}`,
+                {
+                    method: "POST"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error("Deposit failed");
+
+        }
+
+
+        showToast(
+            "Deposit completed successfully."
+        );
+
+
+        document.getElementById("operationAmount")
+            .value = "";
+
+
+        loadAccounts();
+
+    }
+
+    catch(error) {
+
+        showToast(
+            "Deposit could not be completed."
+        );
+
+    }
+
+}
+
+
+
+/* ================= WITHDRAW ================= */
+
+async function withdraw() {
+
+    const id =
+        document.getElementById("operationAccount")
+            .value;
+
+    const amount =
+        document.getElementById("operationAmount")
+            .value;
+
+
+    if (!id || !amount || Number(amount) <= 0) {
+
+        showToast(
+            "Select an account and enter a valid amount."
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/${id}/withdraw?amount=${amount}`,
+                {
+                    method: "POST"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error("Withdrawal failed");
+
+        }
+
+
+        showToast(
+            "Withdrawal completed successfully."
+        );
+
+
+        document.getElementById("operationAmount")
+            .value = "";
+
+
+        loadAccounts();
+
+    }
+
+    catch(error) {
+
+        showToast(
+            "Withdrawal could not be completed."
+        );
+
+    }
+
+}
+
+
+
+/* ================= ABOVE AVERAGE ================= */
+
+async function loadAboveAverage() {
+
+    try {
+
+        const response =
+            await fetch(
+                API + "/above-average"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const container =
+            document.getElementById("aboveAverage");
+
+
+        if (data.length === 0) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+                    No accounts are above average.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        data.forEach(account => {
+
+            container.innerHTML += `
+
+                <div class="average-item">
+
+                    <span class="average-name">
+
+                        Account #${account.accountId}
+
+                    </span>
+
+                    <span class="average-balance">
+
+                        ₹${Number(account.balance).toLocaleString("en-IN")}
+
+                    </span>
+
+                </div>
+
+            `;
+
+        });
+
+    }
+
+    catch(error) {
+
+        showToast(
+            "Could not load average balance data."
+        );
+
+    }
+
+}
+
+
+
+/* ================= TOAST ================= */
+
+let toastTimer;
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+
+    toast.innerText = message;
+
+
+    toast.classList.add("show");
+
+
+    clearTimeout(toastTimer);
+
+
+    toastTimer =
+        setTimeout(() => {
+
+            toast.classList.remove("show");
+
+        }, 3000);
+
+}
+
+
+
+/* ================= START ================= */
+
+loadAccounts();
+
+
+</script>
+
+</body>
+</html>
