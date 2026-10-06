@@ -35,9 +35,19 @@ public class AccountController {
     }
 
     @PostMapping
-    public Account addAccount(@RequestBody Account account) {
-        return accountService.addAccount(account);
-    }
+public Account addAccount(
+        @RequestParam Integer customerId,
+        @RequestParam String customerName,
+        @RequestParam String branchName,
+        @RequestParam BigDecimal balance) {
+
+    return accountService.addAccount(
+            customerId,
+            customerName,
+            branchName,
+            balance
+    );
+}
 
     @DeleteMapping("/{accountId}")
     public String deleteAccount(@PathVariable Integer accountId) {

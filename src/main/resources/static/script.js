@@ -1,4 +1,5 @@
-const API = "/api/accounts";
+const API = "/api/accounts";//alink  btwn api and frontend
+
 
 let accounts = [];
 
@@ -11,7 +12,7 @@ async function loadAccounts() {
 
     try {
 
-        const response = await fetch(API + "/details");
+        const response = await fetch(API + "/details");//fetch to call rest api
 
         if (!response.ok) {
             throw new Error("Unable to load accounts");
@@ -412,74 +413,24 @@ async function withdraw() {
 ========================= */
 
 async function deleteAccount(accountId) {
-
-    const confirmed =
-        confirm(
-            `Are you sure you want to delete account #${accountId}?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
     try {
-
-        const response =
-            await fetch(
-                `${API}/${accountId}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
+        const response = await fetch(`${API}/${accountId}`, {
+            method: "DELETE"
+        });
 
         if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "Delete failed:",
-                errorText
-            );
-
-
-            alert(
-                "Unable to delete this account.\n\n" +
-                "The account may have transactions linked to it."
-            );
-
-            return;
+            throw new Error("Failed to delete account");
         }
 
+        alert("Account deleted successfully");
 
         await loadAccounts();
 
-
-        alert(
-            "Account deleted successfully."
-        );
-
-
     } catch (error) {
-
-        console.error(
-            "Delete error:",
-            error
-        );
-
-
-        alert(
-            "Unable to connect to the server."
-        );
-
+        console.error(error);
+        alert("Error deleting account");
     }
-
 }
-
-
 /* =========================
    CUSTOMER DETAILS
 ========================= */
